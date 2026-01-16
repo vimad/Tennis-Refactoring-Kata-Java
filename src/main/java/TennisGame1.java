@@ -12,60 +12,58 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
+        if ("player1".equals(playerName))
             m_score1 += 1;
         else
             m_score2 += 1;
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore = 0;
-        if (m_score1 == m_score2) {
-            switch (m_score1) {
-                case 0:
-                    score = "Love-All";
-                    break;
-                case 1:
-                    score = "Fifteen-All";
-                    break;
-                case 2:
-                    score = "Thirty-All";
-                    break;
-                default:
-                    score = "Deuce";
-                    break;
-
-            }
-        } else if (m_score1 >= 4 || m_score2 >= 4) {
-            int minusResult = m_score1 - m_score2;
-            if (minusResult == 1) score = "Advantage player1";
-            else if (minusResult == -1) score = "Advantage player2";
-            else if (minusResult >= 2) score = "Win for player1";
-            else score = "Win for player2";
+        if (isBothScoreSame()) {
+            return updateScoreWhenBothEqual();
+        } else if (isOnePlayerHasAdvantageOrWon()) {
+            return getScoreWhenOnePlayerHasAdvantageOrWon();
         } else {
-            for (int i = 1; i < 3; i++) {
-                if (i == 1) tempScore = m_score1;
-                else {
-                    score += "-";
-                    tempScore = m_score2;
-                }
-                switch (tempScore) {
-                    case 0:
-                        score += "Love";
-                        break;
-                    case 1:
-                        score += "Fifteen";
-                        break;
-                    case 2:
-                        score += "Thirty";
-                        break;
-                    case 3:
-                        score += "Forty";
-                        break;
-                }
-            }
+            return getScoreInTheMiddle();
         }
-        return score;
+    }
+
+    private String getScoreInTheMiddle() {
+        return getSingleScore(m_score1) + "-" + getSingleScore(m_score2);
+    }
+
+    private String getSingleScore(int singlePlayerScoreValue) {
+        return switch (singlePlayerScoreValue) {
+            case 0 -> "Love";
+            case 1 -> "Fifteen";
+            case 2 -> "Thirty";
+            case 3 -> "Forty";
+            default -> throw new IllegalStateException("Unexpected value: " + singlePlayerScoreValue);
+        };
+    }
+
+    private boolean isBothScoreSame() {
+        return m_score1 == m_score2;
+    }
+
+    private boolean isOnePlayerHasAdvantageOrWon() {
+        return m_score1 >= 4 || m_score2 >= 4;
+    }
+
+    private String getScoreWhenOnePlayerHasAdvantageOrWon() {
+        int minusResult = m_score1 - m_score2;
+        if (minusResult == 1) return "Advantage player1";
+        else if (minusResult == -1) return "Advantage player2";
+        else if (minusResult >= 2) return "Win for player1";
+        else return "Win for player2";
+    }
+
+    private String updateScoreWhenBothEqual() {
+        return switch (m_score1) {
+            case 0 -> "Love-All";
+            case 1 -> "Fifteen-All";
+            case 2 -> "Thirty-All";
+            default -> "Deuce";
+        };
     }
 }
