@@ -1,10 +1,10 @@
 
 public class TennisGame1 implements TennisGame {
 
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+    private int player1Score = 0;
+    private int player2Score = 0;
+    private final String player1Name;
+    private final String player2Name;
 
     public TennisGame1(String player1Name, String player2Name) {
         this.player1Name = player1Name;
@@ -12,10 +12,10 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if ("player1".equals(playerName))
-            m_score1 += 1;
+        if (player1Name.equals(playerName))
+            player1Score += 1;
         else
-            m_score2 += 1;
+            player2Score += 1;
     }
 
     public String getScore() {
@@ -29,7 +29,7 @@ public class TennisGame1 implements TennisGame {
     }
 
     private String getScoreInTheMiddle() {
-        return getSingleScore(m_score1) + "-" + getSingleScore(m_score2);
+        return getSingleScore(player1Score) + "-" + getSingleScore(player2Score);
     }
 
     private String getSingleScore(int singlePlayerScoreValue) {
@@ -43,23 +43,23 @@ public class TennisGame1 implements TennisGame {
     }
 
     private boolean isBothScoreSame() {
-        return m_score1 == m_score2;
+        return player1Score == player2Score;
     }
 
     private boolean isOnePlayerHasAdvantageOrWon() {
-        return m_score1 >= 4 || m_score2 >= 4;
+        return player1Score >= 4 || player2Score >= 4;
     }
 
     private String getScoreWhenOnePlayerHasAdvantageOrWon() {
-        int minusResult = m_score1 - m_score2;
-        if (minusResult == 1) return "Advantage player1";
-        else if (minusResult == -1) return "Advantage player2";
-        else if (minusResult >= 2) return "Win for player1";
-        else return "Win for player2";
+        int scoreDifference = player1Score - player2Score;
+        if (scoreDifference == 1) return "Advantage " + player1Name;
+        else if (scoreDifference == -1) return "Advantage " + player2Name;
+        else if (scoreDifference >= 2) return "Win for " + player1Name;
+        else return "Win for " + player2Name;
     }
 
     private String updateScoreWhenBothEqual() {
-        return switch (m_score1) {
+        return switch (player1Score) {
             case 0 -> "Love-All";
             case 1 -> "Fifteen-All";
             case 2 -> "Thirty-All";
